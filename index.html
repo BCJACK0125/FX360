@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E.SUN FX360</title>
+    <!-- 引入 Tailwind CSS 進行精準排版與美化 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts 提供高科技感字體 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <!-- 引入 Lucide 圖標庫 -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #020714; /* 深邃黑藍色底 */
+            background-image: 
+              radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.04) 0%, transparent 40%),
+              radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.05) 0%, transparent 40%),
+              linear-gradient(rgba(18, 30, 61, 0.2) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(18, 30, 61, 0.2) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+        }
+        .tech-font {
+            font-family: 'Share Tech Mono', monospace;
+        }
+        /* 擬真科技發光框線與卡片 */
+        .tech-border {
+            border: 1px solid #112d5d;
+            box-shadow: 0 0 15px rgba(17, 45, 93, 0.4);
+        }
+        .tech-card-glow {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.03);
+            transition: all 0.3s ease;
+        }
+        .tech-card-glow:hover {
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.1);
+            border-color: #06b6d4;
+        }
+        /* 機器人上下浮動呼吸動畫 */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .floating-bot {
+            animation: float 4s ease-in-out infinite;
+        }
+        /* 自定義滾動條樣式 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030d24;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="text-gray-200 min-h-screen p-3 md:p-6 select-none">
+
+    <!-- 全域頂部導航列 -->
+    <div class="max-w-[1680px] mx-auto mb-4 flex flex-col sm:flex-row justify-between items-center bg-[#020a1c]/80 border border-[#0d2149] rounded-lg p-3 px-6 gap-3 backdrop-blur-md">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-gradient-to-tr from-cyan-600 to-emerald-500 rounded-lg flex items-center justify-center shadow-lg">
+                <span class="text-white font-black text-sm">玉</span>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold text-white tracking-wide">玉山銀行 E.SUN FX360</h1>
+                <p class="text-[10px] text-slate-400">外匯交易平台</p>
+            </div>
+        </div>
+        <!-- 系統狀態與時鐘 -->
+        <div class="flex items-center gap-3 text-xs font-mono bg-[#061026]/80 border border-[#112d5d] px-4 py-1.5 rounded-full shadow-inner">
+            <span class="flex items-center gap-1.5 text-emerald-400 font-bold">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></span>
+                系統正常連線
+            </span>
+            <span class="text-slate-700">|</span>
+            <span id="clock" class="text-slate-400">2026-06-29 16:24:00</span>
+        </div>
+    </div>
+
+    <!-- 主區塊容器 -->
+    <div class="max-w-[1680px] mx-auto space-y-8 pb-16">
+
+        <!-- ========================================== -->
+        <!-- ============= SECTION 1: 交易中 ============= -->
+        <!-- ========================================== -->
+        <main class="bg-[#020a1c]/90 border border-[#0d2149] rounded-xl shadow-2xl p-4 md:p-6 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
+            
+            <!-- 頂部標題列 -->
+            <header class="flex items-center gap-3 mb-6 border-b border-[#0d2149]/60 pb-4">
+                <!-- 六角形 1 圖示 -->
+                <div class="relative w-10 h-10 flex items-center justify-center">
+                    <svg class="absolute w-full h-full text-cyan-500 fill-cyan-950/40" viewBox="0 0 100 100">
+                        <polygon points="50,5 95,25 95,75 50,95 5,75 5,25" stroke="currentColor" stroke-width="6"/>
+                    </svg>
+                    <span class="relative text-xl font-bold text-white tech-font z-10">1</span>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-white tracking-wide flex items-center gap-2">
+                        交易中 <span class="text-sm font-normal text-slate-400">從市場洞察到智慧下單</span>
+                    </h2>
+                </div>
+            </header>
+
+            <!-- 雙欄主架構 -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- 左側大欄位：市場報價與成交紀錄 (佔 7 格) -->
+                <div class="lg:col-span-7 space-y-6">
+                    
+                    <!-- 市場報價區區塊 -->
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-300 mb-3 tracking-wide flex items-center gap-1.5">
+                            <i data-lucide="trending-up" class="w-4 h-4 text-cyan-400"></i> 市場報價 <span class="text-xs font-normal text-slate-500 font-mono">Market Pricing</span>
+                        </h3>
+                        
+                        <!-- 9 宮格報價卡片 -->
+                        <div id="pricing-grid" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <!-- 由 JavaScript 動態渲染 9 張卡片 -->
+                        </div>
+                    </div>
+
+                    <!-- 成交紀錄區區塊 -->
+                    <div class="border border-[#0d2149] bg-[#030e28]/60 p-4 rounded-lg">
+                        <h3 class="text-sm font-bold text-white mb-3 flex justify-between items-center">
+                            <span class="flex items-center gap-1.5">
+                                <i data-lucide="history" class="w-4 h-4 text-cyan-400"></i> 成交紀錄 <span class="text-xs font-normal text-slate-400 font-mono">Trading Blotters</span>
+                            </span>
+                            <span class="text-[10px] text-cyan-400 bg-cyan-950/50 px-2 py-0.5 rounded border border-cyan-800/40">即時串接中</span>
+                        </h3>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="text-slate-400 border-b border-[#0d2149] pb-2">
+                                        <th class="pb-2 font-normal">Product</th>
+                                        <th class="pb-2 font-normal">Direction</th>
+                                        <th class="pb-2 font-normal">All in Rate</th>
+                                        <th class="pb-2 font-normal">Amount</th>
+                                        <th class="pb-2 font-normal">Trade Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="blotter-body" class="divide-y divide-[#0d2149]/40 tech-font">
+                                    <tr class="hover:bg-slate-900/40">
+                                        <td class="py-2.5 text-white font-sans font-medium">USD/JPY</td>
+                                        <td class="py-2.5"><span class="text-emerald-400 bg-emerald-950/40 px-1.5 py-0.5 rounded font-bold">Buy(USD)</span></td>
+                                        <td class="py-2.5 text-slate-200">161.27</td>
+                                        <td class="py-2.5 text-slate-300">1,000,000</td>
+                                        <td class="py-2.5 text-slate-400 font-sans">25 June 2026 18:37:52</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-900/40">
+                                        <td class="py-2.5 text-white font-sans font-medium">EUR/USD</td>
+                                        <td class="py-2.5"><span class="text-rose-400 bg-rose-950/40 px-1.5 py-0.5 rounded font-bold">Sell(EUR)</span></td>
+                                        <td class="py-2.5 text-slate-200">1.0852</td>
+                                        <td class="py-2.5 text-slate-300">500,000</td>
+                                        <td class="py-2.5 text-slate-400 font-sans">25 June 2026 16:40:46</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-900/40">
+                                        <td class="py-2.5 text-white font-sans font-medium">USD/JPY</td>
+                                        <td class="py-2.5"><span class="text-rose-400 bg-rose-950/40 px-1.5 py-0.5 rounded font-bold">Sell(USD)</span></td>
+                                        <td class="py-2.5 text-slate-200">161.88</td>
+                                        <td class="py-2.5 text-slate-300">1,000,000</td>
+                                        <td class="py-2.5 text-slate-400 font-sans">25 June 2026 08:20:53</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 右側欄位：走勢圖、指標、AI 與掛單 (佔 5 格) -->
+                <div class="lg:col-span-5 space-y-4">
+                    
+                    <!-- 價格走勢圖區 -->
+                    <div class="border border-[#0d2149] bg-[#030e28]/60 p-4 rounded-lg">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                                <i data-lucide="candlestick-chart" class="w-4 h-4 text-cyan-400"></i> 價格走勢 <span class="text-xs text-slate-400 font-mono">Price Chart</span>
+                            </h3>
+                            <span id="active-pair-badge" class="text-xs font-bold text-cyan-400 bg-cyan-950/60 px-2.5 py-0.5 rounded border border-cyan-800">AUD/USD</span>
+                        </div>
+                        <!-- 寫實風 K 線 Canvas -->
+                        <div class="h-44 bg-[#010715] rounded border border-[#0d2149]/60 relative overflow-hidden">
+                            <canvas id="candleCanvas" class="w-full h-full"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- 技術指標與 AI 分析雙欄 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        
+                        <!-- 技術指標 -->
+                        <div class="border border-[#0d2149] bg-[#030e28]/60 p-3 rounded-lg text-xs">
+                            <h4 class="font-bold text-white mb-2 text-xs border-b border-[#0d2149] pb-1 flex items-center gap-1">
+                                <i data-lucide="gauge" class="w-3.5 h-3.5 text-cyan-400"></i> 技術指標 <span class="font-mono text-[10px] text-slate-400">Technicals</span>
+                            </h4>
+                            <div class="space-y-1.5 tech-font text-slate-300">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">MA(20)</span>
+                                    <span id="val-ma20" class="font-semibold text-cyan-400">154.31</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">MA(60)</span>
+                                    <span id="val-ma60" class="font-semibold text-cyan-400">148.50</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">MACD</span>
+                                    <span id="val-macd" class="font-semibold text-rose-400">-0.0012</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-400">RSI(20)</span>
+                                    <span id="val-rsi" class="font-semibold text-emerald-400">32.45</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI 分析 -->
+                        <div class="border border-[#0d2149] bg-[#030e28]/60 p-3 rounded-lg text-xs">
+                            <h4 class="font-bold text-cyan-400 mb-1 flex items-center gap-1">
+                                <i data-lucide="bot" class="w-3.5 h-3.5 text-cyan-400"></i> AI 分析 <span class="font-mono text-[10px] text-slate-400">AI consultant</span>
+                            </h4>
+                            <div id="ai-suggestion-text" class="text-slate-300 leading-relaxed text-[11px]">
+                                <span class="text-amber-400 font-semibold">MACD指標</span> <span class="text-emerald-400">向上</span> 靠近 <span class="text-white">0軸</span> +價格於 <span class="text-rose-400">20日均線</span> 以下。過去 <span class="text-cyan-400 font-mono">240天</span> 內共發生 <span class="text-amber-400 font-mono font-bold">25次</span> 類似走勢，後續 <span class="text-white font-mono">20天</span> 內匯價平均漲幅 <span class="text-emerald-400 font-mono font-bold">0.88%</span>。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 技術指標掛單表單 -->
+                    <div class="border border-[#0d2149] bg-[#030e28]/60 p-4 rounded-lg">
+                        <h3 class="text-sm font-bold text-white mb-3 border-b border-[#0d2149] pb-1.5 flex items-center gap-1.5">
+                            <i data-lucide="sliders" class="w-4 h-4 text-cyan-400"></i> 技術指標掛單 <span class="text-xs text-slate-400 font-mono font-normal">Technical Indicator Order</span>
+                        </h3>
+                        
+                        <form id="indicator-order-form" class="space-y-3 text-xs" onsubmit="handlePlaceOrder(event)">
+                            <!-- 技術指標 -->
+                            <div class="flex items-center justify-between gap-2">
+                                <label class="text-slate-300 font-medium">技術指標 <span class="block text-[10px] text-slate-500 font-mono">Technical Indicator</span></label>
+                                <select id="form-indicator" class="w-1/2 bg-[#020714] border border-[#0d2149] rounded px-2 py-1 text-white focus:outline-none focus:border-cyan-500">
+                                    <option value="MACD">MACD</option>
+                                    <option value="RSI">RSI(20)</option>
+                                    <option value="MA20">MA(20)</option>
+                                </select>
+                            </div>
+                            
+                            <!-- 條件 -->
+                            <div class="flex items-center justify-between gap-2">
+                                <label class="text-slate-300 font-medium">條件 <span class="block text-[10px] text-slate-500 font-mono">Condition</span></label>
+                                <select id="form-condition" class="w-1/2 bg-[#020714] border border-[#0d2149] rounded px-2 py-1 text-white focus:outline-none focus:border-cyan-500">
+                                    <option value="Above">Above</option>
+                                    <option value="Below">Below</option>
+                                    <option value="CrossOver">Cross Over</option>
+                                </select>
+                            </div>
+
+                            <!-- 觸發價位 -->
+                            <div class="flex items-center justify-between gap-2">
+                                <label class="text-slate-300 font-medium">觸發價位 <span class="block text-[10px] text-slate-500 font-mono">Trigger Level</span></label>
+                                <div class="w-1/2 relative">
+                                    <input id="form-trigger" type="text" value="0" class="w-full bg-[#020714] border border-[#0d2149] rounded px-2 py-1 text-white tech-font text-right pr-6 focus:outline-none focus:border-cyan-500">
+                                    <span class="absolute right-2 top-1 text-slate-500 text-[10px]">V</span>
+                                </div>
+                            </div>
+
+                            <!-- 動作 -->
+                            <div class="flex items-center justify-between gap-2">
+                                <label class="text-slate-300 font-medium">動作 <span class="block text-[10px] text-slate-500 font-mono">Action</span></label>
+                                <select id="form-action" class="w-1/2 bg-[#020714] border border-[#0d2149] rounded px-2 py-1 text-white focus:outline-none focus:border-cyan-500">
+                                    <option value="BUY">BUY</option>
+                                    <option value="SELL">SELL</option>
+                                </select>
+                            </div>
+
+                            <!-- 金額 -->
+                            <div class="flex items-center justify-between gap-2">
+                                <label class="text-slate-300 font-medium">金額 <span class="block text-[10px] text-slate-500 font-mono">Amount</span></label>
+                                <div class="w-1/2 relative flex items-center">
+                                    <input id="form-amount" type="text" value="1,000,000" class="w-full bg-[#020714] border border-[#0d2149] rounded px-2 py-1 text-white tech-font text-right pr-12 focus:outline-none focus:border-cyan-500">
+                                    <span id="form-currency-label" class="absolute right-2 text-slate-400 text-[10px] font-mono">USD</span>
+                                </div>
+                            </div>
+
+                            <!-- 送出委託按鈕 -->
+                            <button type="submit" class="w-full bg-[#e67e22] hover:bg-[#d35400] text-white font-bold py-3 px-4 rounded transition-all active:scale-95 shadow-lg shadow-amber-950/20 text-center tracking-widest text-sm mt-4">
+                                送出委託 Place Order
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 底部大功能懸浮按鈕區 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 pt-4 border-t border-[#0d2149]/60">
+                <button onclick="triggerGlobalAction('限價單掛單')" class="bg-[#dcdde1] hover:bg-[#cbd0d6] text-[#2f3640] font-bold py-3 px-6 rounded-lg transition-all text-sm tracking-widest text-center shadow-md active:scale-95">
+                    限價單掛單
+                </button>
+                <button onclick="triggerGlobalAction('智慧單掛單')" class="bg-[#3498db] hover:bg-[#2980b9] text-white font-bold py-3 px-6 rounded-lg transition-all text-sm tracking-widest text-center shadow-md active:scale-95">
+                    智慧單掛單
+                </button>
+                <button onclick="triggerGlobalAction('編輯自選清單')" class="bg-[#48dbfb] hover:bg-[#0abde3] text-[#222f3e] font-bold py-3 px-6 rounded-lg transition-all text-sm tracking-widest text-center shadow-md active:scale-95">
+                    編輯自選清單
+                </button>
+            </div>
+
+        </main>
+
+
+        <!-- ========================================== -->
+        <!-- ============= SECTION 2: 交易後 ============= -->
+        <!-- ========================================== -->
+        <main class="bg-[#020a1c]/90 border border-[#0d2149] rounded-xl shadow-2xl p-4 md:p-6 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
+
+            <!-- 頂部標題列 -->
+            <header class="flex items-center gap-3 mb-6 border-b border-[#0d2149]/60 pb-4">
+                <!-- 六角形 2 圖示 -->
+                <div class="relative w-10 h-10 flex items-center justify-center">
+                    <svg class="absolute w-full h-full text-purple-500 fill-purple-950/40" viewBox="0 0 100 100">
+                        <polygon points="50,5 95,25 95,75 50,95 5,75 5,25" stroke="currentColor" stroke-width="6"/>
+                    </svg>
+                    <span class="relative text-xl font-bold text-white tech-font z-10">2</span>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-white tracking-wide flex items-center gap-2">
+                        交易後 <span class="text-sm font-normal text-slate-400">流程整合 x 即時更新儀表板</span>
+                    </h2>
+                </div>
+            </header>
+
+            <!-- 雙欄主架構 (50% / 50% 完美分欄) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+
+                <!-- 左側：流程整合與待處理 -->
+                <div class="space-y-4 flex flex-col justify-between">
+                    
+                    <!-- A1. 交割與放行追蹤系統 -->
+                    <div class="tech-border tech-card-glow bg-[#050f24]/90 rounded-xl p-4 relative overflow-hidden flex-1">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
+                        
+                        <h3 class="text-xs font-bold tracking-wider text-slate-300 mb-3 flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> 交割與放行追蹤系統
+                        </h3>
+
+                        <!-- 交易已完成 Banner -->
+                        <div class="bg-emerald-950/30 border border-emerald-500/20 rounded-lg p-2.5 mb-3 flex justify-between items-center shadow-inner">
+                            <div class="space-y-0.5">
+                                <div class="text-xs font-black text-emerald-400 flex items-center gap-1.5">
+                                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> 交易已完成 │ Trade Executed
+                                </div>
+                                <div class="text-[10px] text-slate-400 font-mono">
+                                    交易編號：<span class="text-slate-200">TRX202606001</span> │ <span class="text-slate-300">USD 5,000,000 Forward</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 流程進度 與 自動通知相關人員 -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            
+                            <!-- 流程進度 -->
+                            <div class="bg-[#030815]/60 p-3 rounded-lg border border-[#112d5d]">
+                                <div class="text-[11px] font-extrabold text-slate-400 mb-2 pb-1 border-b border-slate-800/80 flex items-center gap-1.5">
+                                    <i data-lucide="git-branch" class="w-3 h-3 text-cyan-400"></i> 流程進度
+                                </div>
+                                <div class="space-y-1 text-center">
+                                    <!-- 項目 1 -->
+                                    <div class="flex justify-between items-center bg-[#050f24]/50 px-2 py-1.5 rounded border border-slate-800/40 text-[10.5px]">
+                                        <span class="text-slate-300">扣款指示 Payment Instruction</span>
+                                        <span class="text-emerald-400 font-bold flex items-center gap-0.5"><i data-lucide="check" class="w-2.5 h-2.5"></i> 完成</span>
+                                    </div>
+                                    <!-- 流程箭頭 -->
+                                    <div class="text-slate-500 text-[10px] leading-none my-0.5">↓</div>
+                                    <!-- 項目 2 -->
+                                    <div class="flex justify-between items-center bg-[#050f24]/50 px-2 py-1.5 rounded border border-slate-800/40 text-[10.5px]">
+                                        <span class="text-slate-300">入帳指示 Settlement Instruction</span>
+                                        <span class="text-emerald-400 font-bold flex items-center gap-0.5"><i data-lucide="check" class="w-2.5 h-2.5"></i> 完成</span>
+                                    </div>
+                                    <!-- 流程箭頭 -->
+                                    <div class="text-slate-500 text-[10px] leading-none my-0.5">↓</div>
+                                    <!-- 項目 3 -->
+                                    <div class="flex justify-between items-center bg-[#050f24]/50 px-2 py-1.5 rounded border border-slate-800/40 text-[10.5px]">
+                                        <span class="text-slate-300">會計通知 Accounting Advice</span>
+                                        <span class="text-emerald-400 font-bold flex items-center gap-0.5"><i data-lucide="check" class="w-2.5 h-2.5"></i> 完成</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 自動通知人員 -->
+                            <div class="bg-[#030815]/60 p-3 rounded-lg border border-[#112d5d]">
+                                <div class="text-[11px] font-extrabold text-slate-400 mb-2 pb-1 border-b border-slate-800/80 flex items-center gap-1.5">
+                                    <i data-lucide="users" class="w-3 h-3 text-amber-400"></i> 自動通知相關人員
+                                </div>
+                                <div class="space-y-1.5">
+                                    <!-- 人員 1 -->
+                                    <div class="flex justify-between items-center bg-[#050f24]/50 p-1.5 rounded border border-slate-800/30">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-5 h-5 rounded-full bg-cyan-950 border border-cyan-800/50 flex items-center justify-center text-[10px] text-cyan-400 font-black">
+                                                <i data-lucide="user" class="w-2.5 h-2.5"></i>
+                                            </div>
+                                            <div class="text-[10px]">
+                                                <span class="text-slate-200 font-bold block leading-none">財務主管</span>
+                                                <span class="text-[8.5px] text-slate-500 font-mono leading-none mt-0.5">Treasury</span>
+                                            </div>
+                                        </div>
+                                        <span class="text-[10px] font-bold text-amber-400 flex items-center gap-0.5">☑ 已放行</span>
+                                    </div>
+                                    <!-- 人員 2 -->
+                                    <div class="flex justify-between items-center bg-[#050f24]/50 p-1.5 rounded border border-slate-800/30">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-5 h-5 rounded-full bg-cyan-950 border border-cyan-800/50 flex items-center justify-center text-[10px] text-cyan-400 font-black">
+                                                <i data-lucide="user" class="w-2.5 h-2.5"></i>
+                                            </div>
+                                            <div class="text-[10px]">
+                                                <span class="text-slate-200 font-bold block leading-none">會計人員</span>
+                                                <span class="text-[8.5px] text-slate-500 font-mono leading-none mt-0.5">Accounting</span>
+                                            </div>
+                                        </div>
+                                        <span class="text-[10px] font-bold text-amber-400 flex items-center gap-0.5">☑ 已放行</span>
+                                    </div>
+                                    <!-- 人員 3 -->
+                                    <div class="flex justify-between items-center bg-[#050f24]/50 p-1.5 rounded border border-slate-800/30">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-5 h-5 rounded-full bg-cyan-950 border border-cyan-800/50 flex items-center justify-center text-[10px] text-cyan-400 font-black">
+                                                <i data-lucide="user" class="w-2.5 h-2.5"></i>
+                                            </div>
+                                            <div class="text-[10px]">
+                                                <span class="text-slate-200 font-bold block leading-none">授權主管</span>
+                                                <span class="text-[8.5px] text-slate-500 font-mono leading-none mt-0.5">Approver</span>
+                                            </div>
+                                        </div>
+                                        <span class="text-[10px] font-bold text-amber-400 flex items-center gap-0.5">☑ 已放行</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- 交易放行(待處理) 內建表格 -->
+                        <div class="bg-[#030815]/60 rounded-lg p-3 border border-[#112d5d]">
+                            <div class="text-[11px] font-extrabold text-slate-300 mb-2 flex items-center gap-1.5">
+                                <i data-lucide="hourglass" class="w-3 h-3 text-cyan-400 animate-pulse"></i> 交易放行(待處理)
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-[11px]">
+                                    <thead>
+                                        <tr class="border-b border-slate-800 text-slate-500 font-semibold">
+                                            <th class="pb-1.5">交易類型</th>
+                                            <th class="pb-1.5">單號</th>
+                                            <th class="pb-1.5">幣別/金額</th>
+                                            <th class="pb-1.5">到期日</th>
+                                            <th class="pb-1.5">狀態</th>
+                                            <th class="pb-1.5 text-center">執行</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="pending-trades-body" class="divide-y divide-slate-800/40 font-mono">
+                                        <tr id="row-TRX202606191002" class="hover:bg-slate-900/30 transition-all">
+                                            <td class="py-2"><span class="bg-indigo-950/40 border border-indigo-500/20 text-indigo-400 px-1.5 py-0.5 rounded text-[9.5px] font-bold">Forward</span></td>
+                                            <td class="py-2 text-slate-400">TRX202606191002</td>
+                                            <td class="py-2 text-slate-200 font-bold">EUR500,000</td>
+                                            <td class="py-2 text-slate-400">2026/6/30</td>
+                                            <td class="py-2 text-amber-400">待放行</td>
+                                            <td class="py-2 text-center">
+                                                <button onclick="releaseItem('TRX202606191002')" class="px-3 py-0.5 rounded border border-cyan-400/40 text-cyan-300 hover:bg-cyan-500 hover:text-white transition-all text-[10px] font-sans font-bold">放行</button>
+                                            </td>
+                                        </tr>
+                                        <tr id="row-FXS202606131001" class="hover:bg-slate-900/30 transition-all">
+                                            <td class="py-2"><span class="bg-purple-950/40 border border-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded text-[9.5px] font-bold">SWAP</span></td>
+                                            <td class="py-2 text-slate-400">FXS202606131001</td>
+                                            <td class="py-2 text-slate-200 font-bold">JPY5,000,000</td>
+                                            <td class="py-2 text-slate-400">2026/7/10</td>
+                                            <td class="py-2 text-amber-400">待放行</td>
+                                            <td class="py-2 text-center">
+                                                <button onclick="releaseItem('FXS202606131001')" class="px-3 py-0.5 rounded border border-cyan-400/40 text-cyan-300 hover:bg-cyan-500 hover:text-white transition-all text-[10px] font-sans font-bold">放行</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- A2. AI 投資/避險建議 -->
+                    <div class="tech-border tech-card-glow bg-[#050f24]/90 rounded-xl p-3.5 flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2.5">
+                            <h3 class="text-xs font-bold tracking-wider text-slate-300 flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span> AI 投資/避險建議 <span class="text-slate-500 font-normal ml-1">AI Consultant</span>
+                            </h3>
+                            <div class="flex items-center gap-1.5 text-[9px] text-purple-400 bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded-full font-mono">
+                                <span class="w-1.5 h-1.5 rounded-full bg-purple-400 animate-ping"></span> Live Analyst
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                            <!-- 左側避險建議清單 -->
+                            <div id="chat-scroller" class="md:col-span-8 space-y-2 max-h-[120px] overflow-y-auto pr-1">
+                                <div class="flex gap-2.5 items-start bg-slate-900/40 p-2 rounded-lg border border-slate-800">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse mt-1.5 flex-shrink-0 shadow-[0_0_8px_#f43f5e]"></span>
+                                    <p class="text-[10.5px] leading-relaxed text-slate-300">您的 USD/JPY Forward 交易目前評價收益已逾 3%，短線 USD/JPY Spot rate 已接近近高，建議鎖定存利匯率。</p>
+                                </div>
+                                <div class="flex gap-2.5 items-start bg-slate-900/40 p-2 rounded-lg border border-slate-800">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse mt-1.5 flex-shrink-0 shadow-[0_0_8px_#f43f5e]"></span>
+                                    <p class="text-[10.5px] leading-relaxed text-slate-300">目前 EUR/USD 來到相對低檔，後續追加加幣配置。</p>
+                                </div>
+                                <div class="flex gap-2.5 items-start bg-slate-900/40 p-2 rounded-lg border border-slate-800">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse mt-1.5 flex-shrink-0 shadow-[0_0_8px_#f43f5e]"></span>
+                                    <p class="text-[10.5px] leading-relaxed text-slate-300">委內瑞拉最新通膨數據高於市場預期，留意年內新興市場風險。</p>
+                                </div>
+                            </div>
+
+                            <!-- 右側可愛 3D 浮空機器人 -->
+                            <div class="md:col-span-4 flex flex-col items-center justify-center py-2 bg-gradient-to-b from-cyan-950/10 to-transparent rounded-xl border border-cyan-950/40">
+                                <div class="floating-bot relative w-12 h-12 bg-slate-950 rounded-full border border-cyan-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                                    <div class="w-8 h-4.5 bg-slate-900 rounded-full border border-cyan-500/20 flex items-center justify-around px-1 relative overflow-hidden">
+                                        <div class="w-1 h-1 rounded-full bg-cyan-400 shadow-[0_0_6px_#22d3ee]"></div>
+                                        <div class="w-1 h-1 rounded-full bg-cyan-400 shadow-[0_0_6px_#22d3ee]"></div>
+                                    </div>
+                                    <div class="absolute -bottom-1 w-6 h-0.5 bg-cyan-400/20 rounded-full blur-sm"></div>
+                                </div>
+                                <span class="text-[8.5px] font-bold text-slate-500 mt-1.5 tracking-wider uppercase">ESUN ROBOT</span>
+                            </div>
+                        </div>
+
+                        <!-- 輸入對話框 -->
+                        <div class="mt-2.5 pt-2 border-t border-slate-800/60 flex items-center gap-2">
+                            <input id="chat-input" type="text" placeholder="+ 問問 AI Consultant" class="flex-1 bg-slate-950 border border-slate-800 hover:border-slate-700 focus:border-purple-500 rounded-lg px-3 py-1.5 text-xs text-slate-200 placeholder-slate-600 outline-none transition-all">
+                            <div class="relative">
+                                <button onclick="askConsultant()" class="p-1.5 bg-purple-950/40 border border-purple-800/60 hover:bg-purple-600 text-purple-400 hover:text-white rounded-lg transition-all active:scale-95">
+                                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                                </button>
+                                <span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_6px_#f43f5e]"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 右側：數據儀表板與評價 -->
+                <div class="space-y-4 flex flex-col justify-between">
+                    
+                    <!-- B1. 交易部位儀表板 -->
+                    <div class="tech-border tech-card-glow bg-[#050f24]/90 rounded-xl p-4 relative overflow-hidden flex flex-col justify-between" style="flex: 0.85 1 0%;">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+                        
+                        <div class="flex justify-between items-center mb-2.5">
+                            <h3 class="text-xs font-bold tracking-wider text-slate-300 flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> 交易部位儀表板
+                            </h3>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+                            
+                            <!-- 左半部分：Donut Chart 與 清單 -->
+                            <div class="sm:col-span-7 h-[135px] flex items-center gap-4 bg-[#030815]/50 p-3 rounded-lg border border-[#112d5d]">
+                                <!-- 圓餅圖 -->
+                                <div class="relative w-28 h-28 flex-shrink-0">
+                                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 42 42">
+                                        <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#10b981" stroke-width="4.8" stroke-dasharray="38 62" stroke-dashoffset="0"></circle>
+                                        <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#3b82f6" stroke-width="4.8" stroke-dasharray="24 76" stroke-dashoffset="-38"></circle>
+                                        <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#f59e0b" stroke-width="4.8" stroke-dasharray="21 79" stroke-dashoffset="-62"></circle>
+                                        <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#eab308" stroke-width="4.8" stroke-dasharray="13 87" stroke-dashoffset="-83"></circle>
+                                        <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#6366f1" stroke-width="4.8" stroke-dasharray="4 96" stroke-dashoffset="-96"></circle>
+                                    </svg>
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                                        <span class="text-[7.5px] text-slate-500 font-bold uppercase tracking-wider leading-none">總部位</span>
+                                        <span class="text-[10.5px] font-black text-white font-mono my-0.5 leading-none">13,300,000</span>
+                                        <span class="text-[7.5px] font-bold text-cyan-400 font-mono leading-none">USD</span>
+                                    </div>
+                                </div>
+
+                                <!-- 數據清單 -->
+                                <div class="flex-1 w-full space-y-1 font-mono text-[10px]">
+                                    <div class="grid grid-cols-2 text-[8px] text-slate-500 font-bold pb-1 mb-1 border-b border-slate-800">
+                                        <span>Currency Pair</span>
+                                        <span class="text-right">Amount(USD)</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-0.5">
+                                        <span class="flex items-center gap-1.5 text-slate-400 font-sans"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>■ USD/JPY</span>
+                                        <span class="text-slate-100 font-bold">5,000,000</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-0.5">
+                                        <span class="flex items-center gap-1.5 text-slate-400 font-sans"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>■ EUR/USD</span>
+                                        <span class="text-slate-100 font-bold">3,200,000</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-0.5">
+                                        <span class="flex items-center gap-1.5 text-slate-400 font-sans"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>■ GBP/USD</span>
+                                        <span class="text-slate-100 font-bold">2,800,000</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-0.5">
+                                        <span class="flex items-center gap-1.5 text-slate-400 font-sans"><span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>■ AUD/USD</span>
+                                        <span class="text-slate-100 font-bold">1,800,000</span>
+                                    </div>
+                                    <div class="flex justify-between items-center py-0.5">
+                                        <span class="flex items-center gap-1.5 text-slate-400 font-sans"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>■ USD/CHF</span>
+                                        <span class="text-slate-100 font-bold">500,000</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 右半部分：損益長條圖 -->
+                            <div class="sm:col-span-5 h-[135px] bg-[#030815]/50 p-3 rounded-lg border border-[#112d5d] flex flex-col justify-between">
+                                <div class="flex justify-between items-end h-[85px] relative px-1">
+                                    <!-- 零基準線 -->
+                                    <div class="absolute left-0 right-0 top-1/2 border-t border-slate-800 border-dashed z-0"></div>
+                                    <!-- Bar 1 -->
+                                    <div class="flex flex-col items-center flex-1 h-full justify-end relative z-10 group">
+                                        <span class="text-[8px] text-rose-500 font-mono -top-4.5 absolute font-bold">-150,000</span>
+                                        <div class="w-2.5 bg-gradient-to-b from-rose-500 to-rose-700 rounded-sm h-[32px] mt-[42px] mb-auto"></div>
+                                    </div>
+                                    <!-- Bar 2 -->
+                                    <div class="flex flex-col items-center flex-1 h-full justify-end relative z-10 group">
+                                        <span class="text-[8px] text-emerald-500 font-mono -top-4.5 absolute font-bold">+100,000</span>
+                                        <div class="w-2.5 bg-gradient-to-t from-emerald-500 to-emerald-700 rounded-sm h-[20px] mb-[42px] mt-auto"></div>
+                                    </div>
+                                    <!-- Bar 3 -->
+                                    <div class="flex flex-col items-center flex-1 h-full justify-end relative z-10 group">
+                                        <span class="text-[8px] text-emerald-500 font-mono -top-4.5 absolute font-bold">+180,000</span>
+                                        <div class="w-2.5 bg-gradient-to-t from-emerald-500 to-emerald-700 rounded-sm h-[38px] mb-[42px] mt-auto"></div>
+                                    </div>
+                                    <!-- Bar 4 -->
+                                    <div class="flex flex-col items-center flex-1 h-full justify-end relative z-10 group">
+                                        <span class="text-[8px] text-rose-500 font-mono -top-4.5 absolute font-bold">-50,000</span>
+                                        <div class="w-2.5 bg-gradient-to-b from-rose-500 to-rose-700 rounded-sm h-[11px] mt-[42px] mb-auto"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- 圖例與部位切換按鈕 -->
+                        <div class="flex justify-around items-center pt-2 mt-1 border-t border-slate-800/50">
+                            <button onclick="showToast('部位總覽', '切換至多空持有資產分布細項分析')" class="px-5 py-1 bg-cyan-950/50 hover:bg-cyan-900 border border-cyan-800 text-cyan-300 rounded text-[10.5px] font-bold font-sans">部位總覽</button>
+                            <button onclick="showToast('部位損益', '切換至即時未實現损益與沖銷對比')" class="px-5 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 rounded text-[10.5px] font-bold font-sans">部位損益</button>
+                        </div>
+                    </div>
+
+                    <!-- B2. 評價資訊與即時損益追蹤 -->
+                    <div class="tech-border tech-card-glow bg-[#050f24]/95 rounded-xl p-3.5 flex flex-col gap-3 overflow-hidden relative" style="flex: 1.15 1 0%;">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-cyan-400 shadow-[0_0_10px_#22d3ee]"></div>
+                        
+                        <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
+                            <h3 class="text-xs font-bold tracking-wider text-slate-200 flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]"></span> 評價資訊與即時損益追蹤
+                            </h3>
+                        </div>
+
+                        <!-- (子版塊一) 即時交易評價 -->
+                        <div class="border border-cyan-500/20 bg-[#030815]/60 p-2.5 rounded-lg shadow-[0_0_15px_rgba(6,182,212,0.03)] space-y-2.5">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1.5">
+                                <div class="text-[11px] font-extrabold text-slate-300 flex items-center gap-1.5">
+                                    <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-cyan-400"></i> 即時交易評價
+                                </div>
+                                <!-- 幣別下拉 -->
+                                <div class="relative w-full sm:w-44">
+                                    <select id="pair-selector" onchange="switchPairDetails()" class="w-full bg-slate-950 border border-slate-800 text-slate-300 px-2.5 py-1 rounded text-[10px] font-mono font-bold outline-none cursor-pointer appearance-none hover:border-slate-700">
+                                        <option value="USD/JPY Forward">USD/JPY Forward</option>
+                                        <option value="EUR/USD Forward">EUR/USD Forward</option>
+                                        <option value="GBP/USD SWAP">GBP/USD SWAP</option>
+                                    </select>
+                                    <div class="absolute right-2.5 top-2 pointer-events-none text-slate-500">
+                                        <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 指標大字卡 (縮小內距) -->
+                            <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5 font-mono text-center">
+                                <div class="p-1.5 bg-[#050f24]/70 rounded-lg border border-slate-800">
+                                    <span class="text-[8.5px] text-slate-500 font-sans block leading-none mb-1">名目金額</span>
+                                    <span id="label-amount" class="text-[10px] font-black text-slate-200">USD5,000,000</span>
+                                </div>
+                                <div class="p-1.5 bg-[#050f24]/70 rounded-lg border border-slate-800">
+                                    <span class="text-[8.5px] text-slate-500 font-sans block leading-none mb-1">成交價格</span>
+                                    <span id="label-strike" class="text-[10px] font-black text-slate-300">155.00</span>
+                                </div>
+                                <div class="p-1.5 bg-[#050f24]/70 rounded-lg border border-slate-800">
+                                    <span class="text-[8.5px] text-slate-500 font-sans block leading-none mb-1">目前價格</span>
+                                    <span id="label-spot" class="text-[10px] font-black text-cyan-400">160.00</span>
+                                </div>
+                                <div class="p-1.5 bg-[#050f24]/70 rounded-lg border border-slate-800">
+                                    <span class="text-[8.5px] text-slate-500 font-sans block leading-none mb-1">到期日</span>
+                                    <span id="label-expiry" class="text-[10px] font-black text-slate-400">2026/7/13</span>
+                                </div>
+                                <div class="p-1.5 bg-emerald-950/35 rounded-lg border border-emerald-500/30 col-span-2 sm:col-span-1 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                                    <span class="text-[8.5px] text-emerald-400 font-sans font-bold block leading-none mb-1">即時評價(MTM)</span>
+                                    <span id="label-mtm" class="text-[10px] font-extrabold text-emerald-400 flex items-center justify-center gap-0.5">
+                                        +USD156,250
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 下方兩個獨立子卡片並列 -->
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-stretch">
+                            
+                            <!-- (子版塊二) 交易評價表 -->
+                            <div class="md:col-span-7 border border-[#112d5d] bg-[#030815]/60 p-2.5 rounded-lg flex flex-col gap-2">
+                                <div class="text-[11px] font-extrabold text-slate-300 flex items-center gap-1.5 pb-1 border-b border-slate-800/80">
+                                    <i data-lucide="file-check-2" class="w-3.5 h-3.5 text-cyan-400"></i> 交易評價表
+                                </div>
+                                
+                                <!-- 仿真對帳單 -->
+                                <div class="bg-white text-slate-800 p-2.5 rounded-lg font-serif text-[8px] shadow-2xl relative flex flex-col justify-between border border-slate-200 flex-grow min-h-[105px]">
+                                    <!-- 防偽浮水印 -->
+                                    <div class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 border-4 border-emerald-500/10 rounded-full flex items-center justify-center text-emerald-500/10 font-black text-[7px] rotate-12 pointer-events-none uppercase">CONFIDENTIAL</div>
+
+                                    <div class="flex justify-between items-center border-b border-slate-300 pb-1 font-sans">
+                                        <div class="flex items-center gap-1">
+                                            <div class="w-3 h-3 bg-[#009973] rounded-full flex items-center justify-center text-[6px] text-white font-extrabold">玉</div>
+                                            <span class="font-extrabold text-[#009973] tracking-tight text-[9px]">玉山銀行</span>
+                                            <span class="text-[4.5px] text-slate-400 font-mono">E.SUN BANK</span>
+                                        </div>
+                                        <span class="text-[4.5px] font-mono text-slate-400">對帳評估報表</span>
+                                    </div>
+
+                                    <div class="my-1 space-y-0.5 font-sans">
+                                        <div class="font-black text-slate-900 text-[10px] tracking-wide">ABC LIMITED</div>
+                                        <div class="text-[6px] text-slate-400 leading-tight">衍生性商品交易對帳暨即時部位市價評估表。本數據僅供參考。</div>
+                                    </div>
+
+                                    <div class="font-mono text-[6px] space-y-0.5">
+                                        <div class="grid grid-cols-5 bg-slate-100 p-0.5 font-bold text-slate-700 font-sans border-t border-b border-slate-200">
+                                            <span>合約序號</span><span>起迄期間</span><span>交易別</span><span>名目金額</span><span>未實現損益</span>
+                                        </div>
+                                        <div class="grid grid-cols-5 p-0.5 text-slate-600 border-b border-slate-100">
+                                            <span>TRX202601</span><span>06.01-07.13</span><span>Forward</span><span>5,000,000</span><span class="text-emerald-600 font-extrabold">+156,250</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- (子版塊三) 報表輸出/下載 -->
+                            <div class="md:col-span-5 border border-[#112d5d] bg-[#030815]/60 p-2.5 rounded-lg flex flex-col justify-between gap-2.5">
+                                <div class="space-y-1.5">
+                                    <div class="text-[11px] font-extrabold text-slate-300 flex items-center gap-1.5 pb-1 border-b border-slate-800/80">
+                                        <i data-lucide="download-cloud" class="w-3.5 h-3.5 text-cyan-400"></i> 報表輸出/下載
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center py-0.5">
+                                        <span class="text-[8px] text-slate-500 font-bold uppercase">報表下載區</span>
+                                        <div class="flex gap-1.5 text-[8.5px] font-bold">
+                                            <span class="text-cyan-400 border-b border-cyan-400">法人專區</span>
+                                            <span class="text-slate-600">|</span>
+                                            <span class="text-slate-500 hover:text-slate-300 cursor-pointer">個人專區</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 gap-1 text-[9.5px]">
+                                        <button onclick="triggerExport('即時損益 P/L')" class="w-full text-left px-2 py-1 bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-cyan-400 rounded border border-slate-800/60 flex justify-between items-center transition-all">
+                                            <span>即時損益 P/L</span> <i data-lucide="chevron-right" class="w-2.5 h-2.5"></i>
+                                        </button>
+                                        <button onclick="triggerExport('評價表 MTM')" class="w-full text-left px-2 py-1 bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-cyan-400 rounded border border-slate-800/60 flex justify-between items-center transition-all">
+                                            <span>評價表 MTM</span> <i data-lucide="chevron-right" class="w-2.5 h-2.5"></i>
+                                        </button>
+                                        <button onclick="triggerExport('交易明細 Detail')" class="w-full text-left px-2 py-1 bg-slate-900/60 hover:bg-slate-800 text-slate-300 hover:text-cyan-400 rounded border border-slate-800/60 flex justify-between items-center transition-all">
+                                            <span>交易明細 Detail</span> <i data-lucide="chevron-right" class="w-2.5 h-2.5"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- 匯出格式按鈕 -->
+                                <div class="grid grid-cols-2 gap-1.5 pt-1.5 border-t border-slate-900">
+                                    <button onclick="triggerExport('XLS 報表')" class="flex items-center justify-center gap-1 py-1.5 bg-emerald-950/40 hover:bg-emerald-900 border border-emerald-500/30 text-emerald-400 text-[9.5px] font-bold rounded">
+                                        <i data-lucide="file-spreadsheet" class="w-3 h-3"></i> XLS
+                                    </button>
+                                    <button onclick="triggerExport('PDF 報表')" class="flex items-center justify-center gap-1 py-1.5 bg-rose-950/40 hover:bg-rose-900 border border-rose-500/30 text-rose-400 text-[9.5px] font-bold rounded">
+                                        <i data-lucide="file-text" class="w-3 h-3"></i> PDF
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <!-- ================= 全域彈出通知組件 (結合原1與2之特色樣式) ================= -->
+    <div id="global-toast" class="fixed bottom-6 right-6 bg-[#030d24]/95 border border-[#00e1ff] text-white py-3.5 px-5 rounded-lg shadow-2xl transition-all transform translate-y-20 opacity-0 pointer-events-none z-50 flex items-center gap-3 backdrop-blur-md">
+        <div class="w-8 h-8 rounded-full bg-cyan-950/80 border border-cyan-400 flex items-center justify-center text-cyan-400 text-lg">✓</div>
+        <div>
+            <div id="toast-title" class="font-bold text-xs text-cyan-400">系統通知</div>
+            <div id="toast-msg" class="text-slate-300 text-[11px] mt-0.5"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript 核心：渲染與交互控制 -->
+    <script>
+        // --- 1. 資料模型：9大外匯商品定義 ---
+        const fxData = {
+            "AUDUSD": { prefix: "0.68", sellBig: "92", sellSub: "0", buyBig: "92", buySub: "5", vd: "V.D. 29 June", baseCcy: "AUD", amount: "1,000,000", type: "order" },
+            "EURUSD": { prefix: "1.13", sellBig: "43", sellSub: "2", buyBig: "43", buySub: "5", vd: "V.D. 29 June", baseCcy: "EUR", amount: "1,000,000", type: "order" },
+            "GBPUSD": { prefix: "1.31", sellBig: "64", sellSub: "9", buyBig: "65", buySub: "1", vd: "V.D. 29 June", baseCcy: "GBP", amount: "1,000,000", type: "order" },
+            "USDJPY": { prefix: "161.", sellBig: "24", sellSub: "5", buyBig: "24", buySub: "7", vd: "V.D. 29 June", baseCcy: "USD", amount: "1,000,000", type: "order" },
+            "USDSGD": { prefix: "1.29", sellBig: "76", sellSub: "3", buyBig: "76", buySub: "5", vd: "V.D. 29 June", baseCcy: "USD", amount: "1,000,000", type: "order" },
+            "USDCNH": { prefix: "6.80", sellBig: "53", sellSub: "1", buyBig: "54", buySub: "7", vd: "V.D. 29 June", baseCcy: "USD", amount: "1,000,000", type: "order" },
+            "USDTWD": { prefix: "31.", sellBig: "83", sellSub: "5", buyBig: "84", buySub: "2", vd: "V.D. 29 June", baseCcy: "USD", amount: "1,000,000", type: "quote" },
+            "USDHKD": { prefix: "7.84", sellBig: "81", sellSub: "8", buyBig: "82", buySub: "0", vd: "V.D. 29 June", baseCcy: "USD", amount: "1,000,000", type: "order" },
+            "USDTHB": { prefix: "33.", sellBig: "39", sellSub: "3", buyBig: "39", buySub: "8", vd: "V.D. 29 June", baseCcy: "USD", amount: "1,000,000", type: "order" }
+        };
+
+        let currentActiveCcy = "AUDUSD";
+
+        // 技術指標 & AI 指引庫 (切換貨幣時連動)
+        const technicalConfigs = {
+            "AUDUSD": { ma20: "0.6845", ma60: "0.6812", macd: "+0.0004", rsi: "54.20", ai: '<span class="text-amber-400 font-semibold">MACD指標</span> <span class="text-emerald-400">向上</span> 靠近 <span class="text-white">0軸</span> +價格於 <span class="text-rose-400">20日均線</span> 以下。過去 <span class="text-cyan-400 font-mono">240天</span> 內共發生 <span class="text-amber-400 font-mono font-bold">25次</span> 類似走勢，後續 <span class="text-white font-mono">20天</span> 內匯價平均漲幅 <span class="text-emerald-400 font-mono font-bold">0.88%</span>。' },
+            "EURUSD": { ma20: "1.1305", ma60: "1.1270", macd: "-0.0008", rsi: "42.80", ai: '<span class="text-amber-400 font-semibold">EURUSD 趨勢</span> 偏多，日K線呈現晨星反轉訊號。MACD 柱狀體縮短。過去 <span class="text-cyan-400 font-mono">180天</span> 發生類似形態 <span class="text-amber-400 font-mono font-bold">12次</span>，後續持平居多。' },
+            "GBPUSD": { ma20: "1.3090", ma60: "1.3015", macd: "+0.0022", rsi: "68.45", ai: '<span class="text-rose-400 font-semibold">超買警告</span>，RSI(20) 已接近 70，且價格顯著偏離 60日均線。建議觀望，切勿於近期盲目追高買入。' },
+            "USDJPY": { ma20: "161.45", ma60: "159.20", macd: "+0.0150", rsi: "72.10", ai: '<span class="text-amber-400 font-semibold">日圓貶值壓力</span> 持續。短期均線多頭排列。唯突破 162 關卡可能觸發日本央行外匯干預機制，應提高止損控管。' },
+            "USDSGD": { ma20: "1.3520", ma60: "1.3580", macd: "-0.0011", rsi: "44.20", ai: '<span class="text-slate-300 font-semibold">星幣窄幅震盪</span>。價格於 20MA 附近盤整。建議在此區間內進行低買高賣操作。' },
+            "USDCNH": { ma20: "7.2450", ma60: "7.2310", macd: "+0.0042", rsi: "58.90", ai: '<span class="text-amber-400 font-semibold">離岸人民幣</span> 微幅走弱。技術面偏向收斂三角整理，突破後將有爆發性方向，請隨時留意。' },
+            "USDTWD": { ma20: "32.220", ma60: "32.110", macd: "-0.0140", rsi: "38.50", ai: '<span class="text-emerald-400 font-semibold">台幣偏強</span>。主要受惠於科技板塊資金匯入。目前處在黃金支撐區 31.8 ~ 32.1 區間。' },
+            "USDHKD": { ma20: "7.8020", ma60: "7.8110", macd: "0.0000", rsi: "50.00", ai: '<span class="text-slate-400 font-semibold">港幣聯繫匯率</span> 正常運作。波動率極低，適合當作高流動性避險泊位，無明顯單邊趨勢。' },
+            "USDTHB": { ma20: "36.420", ma60: "36.180", macd: "-0.0210", rsi: "31.90", ai: '<span class="text-emerald-400 font-semibold">泰銖超賣</span>，RSI 指標已進入 30 極端值。隨時有爆發性技術性反彈可能，宜關注支撐轉折訊號。' }
+        };
+
+        // 幣別細節資料對照 (交易後)
+        const dict = {
+            "USD/JPY Forward": { amount: "USD5,000,000", strike: "155.00", spot: "160.00", expiry: "2026/7/13", mtm: "+USD156,250" },
+            "EUR/USD Forward": { amount: "EUR3,200,000", strike: "1.0820", spot: "1.0940", expiry: "2026/8/20", mtm: "+USD38,400" },
+            "GBP/USD SWAP": { amount: "GBP2,800,000", strike: "1.2650", spot: "1.2810", expiry: "2026/9/15", mtm: "+USD44,800" }
+        };
+
+        // --- 2. 畫作 K 線走勢圖 ---
+        function drawCandlestickChart(ccy) {
+            const canvas = document.getElementById('candleCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // 響應式調整 canvas 本身解析度
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+
+            const width = rect.width;
+            const height = rect.height;
+
+            // 清理畫布
+            ctx.fillStyle = '#010715';
+            ctx.fillRect(0, 0, width, height);
+
+            // 繪製背景橫虛線
+            ctx.strokeStyle = '#0d2149';
+            ctx.lineWidth = 0.5;
+            ctx.setLineDash([4, 4]);
+            for (let y = 30; y < height; y += 35) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+            ctx.setLineDash([]); // 恢復實線
+
+            // 根據不同貨幣生出特定模擬 K 線數據組
+            let seed = ccy.charCodeAt(0) + ccy.charCodeAt(1);
+            let mockCandles = [];
+            let currentClose = 100 + (seed % 50);
+
+            for (let i = 0; i < 28; i++) {
+                let open = currentClose + (Math.sin(i + seed) * 3);
+                let close = open + (Math.cos(i * 1.5 + seed) * 6);
+                let high = Math.max(open, close) + Math.abs(Math.sin(i * 2)) * 3;
+                let low = Math.min(open, close) - Math.abs(Math.cos(i * 2.1)) * 3;
+                mockCandles.push({ open, close, high, low });
+                currentClose = close;
+            }
+
+            // 對齊至畫面高度比例
+            let allPrices = mockCandles.flatMap(c => [c.open, c.close, c.high, c.low]);
+            let minPrice = Math.min(...allPrices) - 2;
+            let maxPrice = Math.max(...allPrices) + 2;
+            let priceRange = maxPrice - minPrice;
+
+            function scaleY(price) {
+                return height - 15 - ((price - minPrice) / priceRange) * (height - 30);
+            }
+
+            const candleWidth = Math.floor(width / 32);
+            const gap = 4;
+
+            // 繪製 K 線蠟燭
+            mockCandles.forEach((candle, idx) => {
+                const x = 10 + idx * (candleWidth + gap);
+                const isBull = candle.close >= candle.open;
+
+                ctx.strokeStyle = isBull ? '#2ecc71' : '#e74c3c';
+                ctx.fillStyle = isBull ? '#2ecc71' : '#e74c3c';
+                ctx.lineWidth = 1.5;
+
+                // 影線 (Wick)
+                ctx.beginPath();
+                ctx.moveTo(x + candleWidth/2, scaleY(candle.high));
+                ctx.lineTo(x + candleWidth/2, scaleY(candle.low));
+                ctx.stroke();
+
+                // 實體 (Body)
+                const yOpen = scaleY(candle.open);
+                const yClose = scaleY(candle.close);
+                const bodyHeight = Math.max(Math.abs(yClose - yOpen), 2);
+                const bodyY = Math.min(yOpen, yClose);
+
+                ctx.fillRect(x, bodyY, candleWidth, bodyHeight);
+            });
+
+            // 繪製兩條均線 MA (20 & 60)
+            let drawMA = (period, color) => {
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                for (let i = period; i < mockCandles.length; i++) {
+                    let sum = 0;
+                    for (let j = 0; j < period; j++) {
+                        sum += mockCandles[i - j].close;
+                    }
+                    let avg = sum / period;
+                    const x = 10 + i * (candleWidth + gap) + candleWidth / 2;
+                    if (i === period) {
+                        ctx.moveTo(x, scaleY(avg));
+                    } else {
+                        ctx.lineTo(x, scaleY(avg));
+                    }
+                }
+                ctx.stroke();
+            };
+
+            drawMA(5, '#00e1ff'); // 快速均線 (模擬 MA20)
+            drawMA(10, '#f1c40f'); // 慢速均線 (模擬 MA60)
+        }
+
+        // --- 3. 渲染報價九宮格卡片 ---
+        function renderPricingGrid() {
+            const grid = document.getElementById('pricing-grid');
+            if (!grid) return;
+            grid.innerHTML = "";
+
+            Object.keys(fxData).forEach(pair => {
+                const item = fxData[pair];
+                const isActive = pair === currentActiveCcy;
+
+                const card = document.createElement('div');
+                card.className = `border ${isActive ? 'border-cyan-400 bg-[#030f2c]/90 shadow-lg shadow-cyan-950/20' : 'border-[#0d2149] bg-[#030e28]/60 hover:bg-[#030e28]/90'} p-3 rounded-lg transition-all cursor-pointer`;
+                card.id = `card-${pair}`;
+                card.onclick = () => selectCurrency(pair);
+
+                // 卡片內層排版
+                let buttonsHTML = "";
+                if (item.type === "order") {
+                    buttonsHTML = `
+                        <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-[#0d2149]/40">
+                            <button onclick="event.stopPropagation(); quickOrder('${pair}', 'Sell', '${item.prefix}${item.sellBig}${item.sellSub}')" class="bg-[#e6f4ea] hover:bg-[#d2ebd9] text-[#137333] font-bold py-1.5 px-2 rounded text-[11px] transition-all active:scale-95 text-center">
+                                Place<br>Sell Order
+                            </button>
+                            <button onclick="event.stopPropagation(); quickOrder('${pair}', 'Buy', '${item.prefix}${item.buyBig}${item.buySub}')" class="bg-[#fce8e6] hover:bg-[#fad2cf] text-[#c5221f] font-bold py-1.5 px-2 rounded text-[11px] transition-all active:scale-95 text-center">
+                                Place<br>Buy Order
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    buttonsHTML = `
+                        <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-[#0d2149]/40">
+                            <button onclick="event.stopPropagation(); quickQuote('${pair}')" class="col-span-2 bg-[#fef7e0] hover:bg-[#feeed0] text-[#b06000] font-bold py-1.5 rounded text-[11px] transition-all active:scale-95 text-center">
+                                Reference For Quote
+                            </button>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-white tracking-wider">${pair}</span>
+                        <span class="text-[9px] text-slate-500 font-mono">${item.vd}</span>
+                    </div>
+                    
+                    <!-- 買賣價巨型數字排版 -->
+                    <div class="grid grid-cols-2 gap-2 mt-2">
+                        <!-- 賣價 (Sell) -->
+                        <div class="border-r border-[#0d2149]/50 pr-2">
+                            <div class="flex items-baseline tech-font">
+                                <span class="text-[10px] text-slate-400 font-mono self-start">${item.prefix}</span>
+                                <span class="text-2xl font-bold text-white tracking-tighter leading-none">${item.sellBig}</span>
+                                <span class="text-xs text-slate-300 font-mono font-medium self-end">${item.sellSub}</span>
+                            </div>
+                        </div>
+                        <!-- 買價 (Buy) -->
+                        <div class="pl-1">
+                            <div class="flex items-baseline tech-font">
+                                <span class="text-[10px] text-slate-400 font-mono self-start">${item.prefix}</span>
+                                <span class="text-2xl font-bold text-white tracking-tighter leading-none">${item.buyBig}</span>
+                                <span class="text-xs text-slate-300 font-mono font-medium self-end">${item.buySub}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center text-[9px] text-slate-500 mt-1 font-mono">
+                        <span>${item.baseCcy}</span>
+                        <span>${Number(item.amount).toLocaleString()}</span>
+                    </div>
+
+                    ${buttonsHTML}
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // --- 4. 貨幣切換邏輯與右側內容連動 ---
+        function selectCurrency(pair) {
+            currentActiveCcy = pair;
+            
+            // 更新卡片外框狀態
+            renderPricingGrid();
+
+            // 更新走勢圖
+            const activePairBadge = document.getElementById('active-pair-badge');
+            if (activePairBadge) {
+                activePairBadge.innerText = `${pair.substring(0,3)}/${pair.substring(3)}`;
+            }
+            drawCandlestickChart(pair);
+
+            // 更新指標值
+            const config = technicalConfigs[pair] || technicalConfigs["AUDUSD"];
+            document.getElementById('val-ma20').innerText = config.ma20;
+            document.getElementById('val-ma60').innerText = config.ma60;
+            document.getElementById('val-macd').innerText = config.macd;
+            document.getElementById('val-rsi').innerText = config.rsi;
+
+            // 更新 AI 分析
+            document.getElementById('ai-suggestion-text').innerHTML = config.ai;
+
+            // 掛單表單幣別欄位更新
+            document.getElementById('form-currency-label').innerText = pair.substring(0, 3);
+        }
+
+        // --- 5. 即時更新數據模擬 (維持金融平台真實動態感) ---
+        function simulateRealtimeQuotes() {
+            setInterval(() => {
+                Object.keys(fxData).forEach(pair => {
+                    const item = fxData[pair];
+                    // 模擬 35% 的機率微幅上下跳動 1 個 pip
+                    if (Math.random() < 0.35) {
+                        let subVal = parseInt(item.buySub);
+                        let bigVal = parseInt(item.buyBig);
+                        
+                        // 隨機 +1 或 -1
+                        if (Math.random() > 0.5) {
+                            subVal += 1;
+                            if (subVal > 9) {
+                                subVal = 0;
+                                bigVal += 1;
+                            }
+                        } else {
+                            subVal -= 1;
+                            if (subVal < 0) {
+                                subVal = 9;
+                                bigVal -= 1;
+                            }
+                        }
+                        item.buySub = subVal.toString();
+                        item.buyBig = bigVal.toString();
+                        
+                        // 賣價與買價保持固定價差
+                        item.sellSub = Math.max(0, subVal - 2).toString();
+                        item.sellBig = bigVal.toString();
+                    }
+                });
+                // 重新刷新報價介面顯示
+                renderPricingGrid();
+                
+                // 動態刷新當前選擇貨幣之 K 線
+                drawCandlestickChart(currentActiveCcy);
+            }, 3500);
+        }
+
+        // --- 6. 全域彈出通知系統 (Polymorphic) ---
+        let toastTimeout;
+        function showToast(titleOrText, optMessage) {
+            const toast = document.getElementById('global-toast');
+            const toastTitle = document.getElementById('toast-title');
+            const toastMsg = document.getElementById('toast-msg');
+
+            if (optMessage !== undefined) {
+                toastTitle.innerText = titleOrText;
+                toastMsg.innerText = optMessage;
+            } else {
+                toastTitle.innerText = "系統通知";
+                toastMsg.innerText = titleOrText;
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 4000);
+        }
+
+        // 卡片點擊掛單
+        function quickOrder(pair, action, price) {
+            document.getElementById('form-action').value = action.toUpperCase();
+            document.getElementById('form-trigger').value = price;
+            selectCurrency(pair);
+
+            showToast("下單代入成功", `已將 ${pair} 的 ${action} 點位 (${price}) 帶入下方指標掛單區。`);
+        }
+
+        function quickQuote(pair) {
+            showToast("參考報價諮詢", `已為您請求 ${pair} 的最新市場參考報價，顧問將隨時與客戶聯繫。`);
+        }
+
+        // 表單提交掛單
+        function handlePlaceOrder(event) {
+            event.preventDefault();
+
+            const indicator = document.getElementById('form-indicator').value;
+            const condition = document.getElementById('form-condition').value;
+            const triggerVal = document.getElementById('form-trigger').value;
+            const action = document.getElementById('form-action').value;
+            const amount = document.getElementById('form-amount').value;
+            const ccy = currentActiveCcy;
+
+            // 動態塞入成交歷史以供視覺回饋
+            const blotterBody = document.getElementById('blotter-body');
+            const newRow = document.createElement('tr');
+            newRow.className = "hover:bg-slate-900/40 bg-cyan-950/20";
+            
+            const now = new Date();
+            const timeStr = `${now.getDate()} June 2026 ${now.toTimeString().split(' ')[0]}`;
+
+            newRow.innerHTML = `
+                <td class="py-2.5 text-white font-sans font-bold text-cyan-400">${ccy.substring(0,3)}/${ccy.substring(3)}</td>
+                <td class="py-2.5"><span class="${action === 'BUY' ? 'text-emerald-400 bg-emerald-950/40' : 'text-rose-400 bg-rose-950/40'} px-1.5 py-0.5 rounded font-bold">${action}(${ccy.substring(0,3)})</span></td>
+                <td class="py-2.5 text-slate-200">${triggerVal}</td>
+                <td class="py-2.5 text-slate-300">${amount}</td>
+                <td class="py-2.5 text-cyan-300 font-sans">${timeStr}</td>
+            `;
+
+            blotterBody.insertBefore(newRow, blotterBody.firstChild);
+
+            showToast("掛單委託成功", `技術指標委託已送出！條件：當 ${ccy} 的 ${indicator} 處於 ${condition} ${triggerVal} 時，執行 ${action} ${amount}。`);
+        }
+
+        // 底部三大功能鍵點擊
+        function triggerGlobalAction(name) {
+            showToast("導航功能啟動", `您已點擊『${name}』功能，系統將開啟相關對話視窗進行細項操作。`);
+        }
+
+        // --- 7. 交易後 (SECTION 2) 互動程式碼 ---
+        
+        // 更新系統即時時鐘
+        function updateLiveTime() {
+            const now = new Date();
+            const pad = (v) => String(v).padStart(2, '0');
+            const clockStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+            const clockEl = document.getElementById('clock');
+            if (clockEl) clockEl.innerText = clockStr;
+        }
+
+        // 執行待放行單據並從清單移除 (帶有動畫)
+        function releaseItem(id) {
+            const row = document.getElementById(`row-${id}`);
+            if (row) {
+                row.classList.add('opacity-0', 'translate-x-4');
+                setTimeout(() => {
+                    row.remove();
+                    showToast("☑ 交易放行完成", `單號 ${id} 已成功放行！已向主管系統推送完成通知。`);
+                    
+                    const tbody = document.getElementById('pending-trades-body');
+                    if (tbody && tbody.children.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="6" class="py-6 text-center text-slate-500 italic font-sans text-xs">
+                                    ✔ 暫無待處理的交易放行單據
+                                </td>
+                            </tr>
+                        `;
+                    }
+                }, 300);
+            }
+        }
+
+        // 模擬 AI 智慧對話反饋
+        function askConsultant() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            const chatScroller = document.getElementById('chat-scroller');
+            
+            if (!text || !chatScroller) return;
+
+            // 使用者發送
+            const userBubble = document.createElement('div');
+            userBubble.className = "flex gap-2.5 items-start bg-purple-950/20 p-2 rounded-lg border border-purple-800/40 ml-6 justify-end";
+            userBubble.innerHTML = `<p class="text-[10.5px] leading-relaxed text-purple-200">${text}</p>`;
+            chatScroller.appendChild(userBubble);
+            input.value = '';
+            chatScroller.scrollTop = chatScroller.scrollHeight;
+
+            // 智慧機器人秒級反饋
+            setTimeout(() => {
+                const botBubble = document.createElement('div');
+                botBubble.className = "flex gap-2.5 items-start bg-slate-900/40 p-2 rounded-lg border border-slate-800";
+                
+                let response = "分析顯示近三日外匯波動趨穩，目前的對沖水位足夠。如有交易放行需求，請盡速完成核章。";
+                if (text.toLowerCase().includes('jpy') || text.includes('日圓') || text.includes('日元')) {
+                    response = "針對日圓部位：日圓正處於技術面壓力區，如果您的實質結匯部位在 160.00 附近，建議分批辦理三個月遠期外匯。";
+                } else if (text.toLowerCase().includes('eur') || text.includes('歐元')) {
+                    response = "歐元走勢目前符合加碼配置區間，建議按月度計劃分批補足合約本金。";
+                }
+
+                botBubble.innerHTML = `
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse mt-1.5 flex-shrink-0 shadow-[0_0_8px_#f43f5e]"></span>
+                    <p class="text-[10.5px] leading-relaxed text-slate-300">${response}</p>
+                `;
+                chatScroller.appendChild(botBubble);
+                chatScroller.scrollTop = chatScroller.scrollHeight;
+            }, 1000);
+        }
+
+        function switchPairDetails() {
+            const select = document.getElementById('pair-selector');
+            if (!select) return;
+            const item = dict[select.value];
+            if (item) {
+                document.getElementById('label-amount').innerText = item.amount;
+                document.getElementById('label-strike').innerText = item.strike;
+                document.getElementById('label-spot').innerText = item.spot;
+                document.getElementById('label-expiry').innerText = item.expiry;
+                document.getElementById('label-mtm').innerText = item.mtm;
+            }
+        }
+
+        // 匯出報表模擬
+        function triggerExport(name) {
+            showToast("⇩ 正在打包輸出", `正在分析系統數據，封裝 ${name}...`);
+            setTimeout(() => {
+                showToast("✓ 匯出成功", `${name} 下載完成！`);
+            }, 1500);
+        }
+
+        // --- 8. 初始化啟動程序 ---
+        window.onload = function() {
+            // 初始化 Section 1 
+            renderPricingGrid();
+            selectCurrency("AUDUSD");
+            simulateRealtimeQuotes();
+            
+            // 初始化 Section 2
+            lucide.createIcons();
+            updateLiveTime();
+            setInterval(updateLiveTime, 1000);
+
+            // 監聽聊天輸入框 Enter
+            const chatInput = document.getElementById('chat-input');
+            if (chatInput) {
+                chatInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') askConsultant();
+                });
+            }
+
+            // 監聽視窗縮放以動態重繪 K 線圖
+            window.addEventListener('resize', () => {
+                drawCandlestickChart(currentActiveCcy);
+            });
+        };
+    </script>
+</body>
+</html>
