@@ -643,7 +643,7 @@
                     </div>
 
                     <!-- B2. 評價資訊與即時損益追蹤 -->
-                    <div class="tech-border tech-card-glow bg-[#050f24]/95 rounded-xl p-3.5 flex flex-col gap-3 overflow-hidden relative" style="flex: 1.15 1 0%;">
+                    <div class="tech-border tech-card-glow bg-[#050f24]/95 rounded-xl p-3.5 flex flex-col gap-3 overflow-hidden relative">
                         <div class="absolute top-0 left-0 w-1 h-full bg-cyan-400 shadow-[0_0_10px_#22d3ee]"></div>
                         
                         <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
@@ -990,17 +990,17 @@
                         <!-- 賣價 (Sell) -->
                         <div class="border-r border-[#0d2149]/50 pr-2">
                             <div class="flex items-baseline tech-font">
-                                <span class="text-[19px] text-slate-400 font-mono self-start relative bottom-[3px]">${item.prefix}</span>
-                                <span class="text-3xl font-bold text-white tracking-tighter leading-none">${item.sellBig}</span>
-                                <span class="text-xl text-slate-300 font-mono font-medium self-end translate-y-[2.4px]">${item.sellSub}</span>
+                                <span class="text-[20px] text-slate-400 font-mono self-start relative bottom-[3px]">${item.prefix}</span>
+                                <span class="text-[35px] font-bold text-white tracking-tighter leading-none">${item.sellBig}</span>
+                                <span class="text-[21px] text-slate-300 font-mono font-medium self-end translate-y-[2.4px]">${item.sellSub}</span>
                             </div>
                         </div>
                         <!-- 買價 (Buy) -->
                         <div class="pl-1">
                             <div class="flex items-baseline tech-font">
-                                <span class="text-[19px] text-slate-400 font-mono self-start relative bottom-[3px]">${item.prefix}</span>
-                                <span class="text-3xl font-bold text-white tracking-tighter leading-none">${item.buyBig}</span>
-                                <span class="text-xl text-slate-300 font-mono font-medium self-end translate-y-[2.4px]">${item.buySub}</span>
+                                <span class="text-[20px] text-slate-400 font-mono self-start relative bottom-[3px]">${item.prefix}</span>
+                                <span class="text-[35px] font-bold text-white tracking-tighter leading-none">${item.buyBig}</span>
+                                <span class="text-[21px] text-slate-300 font-mono font-medium self-end translate-y-[2.4px]">${item.buySub}</span>
                             </div>
                         </div>
                     </div>
@@ -1335,19 +1335,28 @@
                 <div class="font-black text-slate-900 text-xl tracking-wide">ABC LIMITED</div>
                 <div class="text-sm text-slate-500 leading-tight">衍生性商品交易對帳暨即時部位市價評估表。本數據僅供參考。</div>
             </div>
-        <!-- 〔修改後〕加上水平滾動容器-->
-        <div class="overflow-x-auto">
-            <div class="font-mono text-sm space-y-1">
-                <div class="grid grid-cols-5 bg-slate-100 p-2 font-bold text-slate-700 font-sans border-t border-b border-slate-200">
-                    <span>合約序號</span><span>起迄期間</span><span>交易別</span><span class="text-right">名目金額</span><span class="text-right">未實現損益</span>
-                </div>
-                <div class="grid grid-cols-5 p-2 text-slate-600 border-b border-slate-100">
-                    <span>TRX202601</span><span>06.01-07.13</span><span>Forward</span><span class="text-right">5,000,000</span><span class="text-emerald-600 font-extrabold text-right">+156,250</span>
-                </div>
-                 <!-- 您可以在此處增加更多交易紀錄 -->
-            </div>
+	
+    <!-- 【修改後】加上 overflow-x-auto 和 whitespace-nowrap -->
+<div class="overflow-x-auto">
+    <div class="font-mono text-sm space-y-1 min-w-[600px]">
+        <!-- 關鍵修改：在 grid 容器加上 whitespace-nowrap -->
+        <div class="grid grid-cols-5 bg-slate-100 p-2 font-bold text-slate-700 font-sans border-t border-b border-slate-200 whitespace-nowrap">
+            <span>合約序號</span>
+            <span>起迄期間</span>
+            <span>交易別</span>
+            <span class="text-right">名目金額</span>
+            <span class="text-right">未實現損益</span>
+        </div>
+        <!-- 關鍵修改：在 grid 容器加上 whitespace-nowrap -->
+        <div class="grid grid-cols-5 p-2 text-slate-600 border-b border-slate-100 whitespace-nowrap">
+            <span>TRX202601</span>
+            <span>06.01-07.13</span>
+            <span>Forward</span>
+            <span class="text-right">5,000,000</span>
+            <span class="text-emerald-600 font-extrabold text-right">+156,250</span>
         </div>
     </div>
+</div>
 </div>
 </div>
 
