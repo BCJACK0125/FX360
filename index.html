@@ -708,7 +708,7 @@
                                 </div>
                                 
                                 <!-- 仿真對帳單 -->
-                                <div class="bg-white text-slate-800 p-2.5 rounded-lg font-serif text-[8px] shadow-2xl relative flex flex-col justify-between border border-slate-200 flex-grow min-h-[105px]">
+                                <div id="zoomable-statement" onclick="openStatementModal()" class="bg-white text-slate-800 p-2.5 rounded-lg font-serif text-[8px] shadow-2xl relative flex flex-col justify-between border border-slate-200 flex-grow min-h-[105px] cursor-pointer hover:shadow-cyan-500/20 hover:border-cyan-500 transition-all">
                                     <!-- 防偽浮水印 -->
                                     <div class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 border-4 border-emerald-500/10 rounded-full flex items-center justify-center text-emerald-500/10 font-black text-[7px] rotate-12 pointer-events-none uppercase">CONFIDENTIAL</div>
 
@@ -990,17 +990,17 @@
                         <!-- 賣價 (Sell) -->
                         <div class="border-r border-[#0d2149]/50 pr-2">
                             <div class="flex items-baseline tech-font">
-                                <span class="text-[10px] text-slate-400 font-mono self-start">${item.prefix}</span>
-                                <span class="text-2xl font-bold text-white tracking-tighter leading-none">${item.sellBig}</span>
-                                <span class="text-xs text-slate-300 font-mono font-medium self-end">${item.sellSub}</span>
+                                <span class="text-[19px] text-slate-400 font-mono self-start relative bottom-[3px]">${item.prefix}</span>
+                                <span class="text-3xl font-bold text-white tracking-tighter leading-none">${item.sellBig}</span>
+                                <span class="text-xl text-slate-300 font-mono font-medium self-end translate-y-[2.4px]">${item.sellSub}</span>
                             </div>
                         </div>
                         <!-- 買價 (Buy) -->
                         <div class="pl-1">
                             <div class="flex items-baseline tech-font">
-                                <span class="text-[10px] text-slate-400 font-mono self-start">${item.prefix}</span>
-                                <span class="text-2xl font-bold text-white tracking-tighter leading-none">${item.buyBig}</span>
-                                <span class="text-xs text-slate-300 font-mono font-medium self-end">${item.buySub}</span>
+                                <span class="text-[19px] text-slate-400 font-mono self-start relative bottom-[3px]">${item.prefix}</span>
+                                <span class="text-3xl font-bold text-white tracking-tighter leading-none">${item.buyBig}</span>
+                                <span class="text-xl text-slate-300 font-mono font-medium self-end translate-y-[2.4px]">${item.buySub}</span>
                             </div>
                         </div>
                     </div>
@@ -1262,7 +1262,7 @@
             // 初始化 Section 2
             lucide.createIcons();
             updateLiveTime();
-            setInterval(updateLiveTime, 1000);
+            setInterval(updateLiveTime, 125);
 
             // 監聽聊天輸入框 Enter
             const chatInput = document.getElementById('chat-input');
@@ -1277,6 +1277,77 @@
                 drawCandlestickChart(currentActiveCcy);
             });
         };
+	        // --- 9. 放大對帳單 Modal 控制 ---
+        function openStatementModal() {
+            const modal = document.getElementById('statement-modal');
+            const modalContent = modal.querySelector('.transform');
+            if (modal) {
+                modal.classList.remove('hidden');
+                // 為了讓動畫生效，我們需要稍微延遲來加上 class
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modalContent.classList.remove('scale-95');
+                }, 10);
+            }
+        }
+
+        function closeStatementModal() {
+            const modal = document.getElementById('statement-modal');
+            const modalContent = modal.querySelector('.transform');
+            if (modal) {
+                modal.classList.add('opacity-0');
+                modalContent.classList.add('scale-95');
+                 // 等待動畫結束後再隱藏
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+        }
+        
+        // 點擊 Modal 背景時也關閉
+        document.getElementById('statement-modal').addEventListener('click', closeStatementModal);
+
     </script>
+	<!-- ================= 放大對帳單 Modal 結構 ================= -->
+<div id="statement-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden transition-opacity duration-300">
+    <!-- Modal 內容，點擊此處不會關閉 -->
+    <div onclick="event.stopPropagation()" class="relative bg-white text-slate-800 rounded-lg shadow-2xl w-full max-w-2xl transform transition-all duration-300 scale-95">
+        
+        <!-- 關閉按鈕 -->
+        <button onclick="closeStatementModal()" class="absolute -top-3 -right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center text-slate-600 hover:bg-slate-200 hover:rotate-90 transition-all z-10 shadow-lg">
+            <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <!-- 放大版的對帳單內容 (字體已調大) -->
+        <div class="p-8 font-serif">
+            <div class="flex justify-between items-center border-b border-slate-300 pb-2 font-sans">
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 bg-[#009973] rounded-full flex items-center justify-center text-sm text-white font-extrabold">玉</div>
+                    <div class="flex flex-col">
+                        <span class="font-extrabold text-[#009973] tracking-tight text-lg">玉山銀行</span>
+                        <span class="text-xs text-slate-400 font-mono">E.SUN BANK</span>
+                    </div>
+                </div>
+                <span class="text-xs font-mono text-slate-500">對帳評估報表</span>
+            </div>
+
+            <div class="my-4 space-y-1 font-sans">
+                <div class="font-black text-slate-900 text-xl tracking-wide">ABC LIMITED</div>
+                <div class="text-sm text-slate-500 leading-tight">衍生性商品交易對帳暨即時部位市價評估表。本數據僅供參考。</div>
+            </div>
+
+            <div class="font-mono text-sm space-y-1">
+                <div class="grid grid-cols-5 bg-slate-100 p-2 font-bold text-slate-700 font-sans border-t border-b border-slate-200">
+                    <span>合約序號</span><span>起迄期間</span><span>交易別</span><span class="text-right">名目金額</span><span class="text-right">未實現損益</span>
+                </div>
+                <div class="grid grid-cols-5 p-2 text-slate-600 border-b border-slate-100">
+                    <span>TRX202601</span><span>06.01-07.13</span><span>Forward</span><span class="text-right">5,000,000</span><span class="text-emerald-600 font-extrabold text-right">+156,250</span>
+                </div>
+                 <!-- 您可以在此處增加更多交易紀錄 -->
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
